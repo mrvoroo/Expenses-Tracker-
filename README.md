@@ -1,77 +1,31 @@
 # تتبع المصاريف | Expenses Tracker
 
-تطبيق ويب لتتبع المصروفات الشخصية والعائلية مع تحليل الإنفاق وتنبيهات الميزانية.
+موقع ويب لتتبع المصروفات الشخصية والعائلية. يساعدك على تسجيل مصروفاتك اليومية، مراقبة إنفاقك، واستلام تنبيهات عند اقترابك من تجاوز الميزانية.
+
+---
+
+## عن الموقع
+
+- **تسجيل المصاريف:** إضافة مصاريفك مع الفئة (طعام، مواصلات، تسوق، فواتير، ترفيه، أو فئات مخصصة) وسبب/وصف اختياري.
+- **لوحة التحكم:** عرض إجمالي المصروف الشهري، الميزانية، المتبقي، ورسوم بيانية (دائري حسب الفئة، أعمدة لاتجاه الإنفاق).
+- **تنبيهات الميزانية:** تنبيه عند وصولك لنسبة معينة من الميزانية (مثل 80%).
+- **التقارير:** تقارير شهرية وتوزيع المصاريف حسب الفئة.
+- **الإعدادات:** تحديد الميزانية الشهرية، العملة (جنيه مصري، ريال سعودي، دينار أردني، وغيرها)، تفعيل/إيقاف التنبيهات، وإضافة فئات مصاريف مخصصة.
+- **تسجيل الدخول:** عبر البريد وكلمة المرور أو عبر Google، مع إمكانية نسيت كلمة المرور وتغيير كلمة المرور من الإعدادات.
+
+الواجهة باللغة العربية وبتصميم متجاوب، ويدعم الوضع الفاتح والداكن.
+
+---
+
+## من التطوير
+
+**Mr. Voroo**
+
+- **Instagram:** [mrvoroo](https://instagram.com/mrvoroo) · [Mr Voroo | piaaz_team](https://www.instagram.com/piaaz_team)
+- **TikTok:** [mrvoroo](https://tiktok.com/@mrvoroo) · [Mr Voroo | piaaz.team](https://www.tiktok.com/@piaaz.team)
+
+---
 
 ## التقنيات
 
-- **واجهة أمامية:** React 19 + TypeScript + Vite
-- **قاعدة البيانات:** Firebase Firestore
-- **المصادقة:** Firebase Authentication
-- **التصميم:** Tailwind CSS v4
-- **الرسوم البيانية:** Recharts
-- **النماذج:** React Hook Form
-- **التواريخ:** date-fns
-
-## التشغيل المحلي
-
-### 1. تثبيت الحزم
-
-```bash
-npm install
-```
-
-### 2. إعداد Firebase
-
-1. أنشئ مشروعاً في [Firebase Console](https://console.firebase.google.com).
-2. فعّل **Authentication** (Email/Password).
-3. أنشئ قاعدة بيانات **Firestore**.
-4. انسخ `.env.example` إلى `.env` واملأ قيم مشروعك:
-
-```env
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-VITE_FIREBASE_MESSAGING_SENDER_ID=...
-VITE_FIREBASE_APP_ID=...
-```
-
-### 3. تشغيل المشروع
-
-```bash
-npm run dev
-```
-
-افتح المتصفح على الرابط المعروض (عادة `http://localhost:5173`).
-
-## البناء للنشر
-
-```bash
-npm run build
-```
-
-الملفات الناتجة في `dist/`. يمكن رفعها على Firebase Hosting أو أي استضافة ثابتة.
-
-## هيكل المشروع
-
-```
-src/
-├── components/     # مكونات الواجهة
-│   ├── dashboard/ # لوحة التحكم والرسوم
-│   ├── expenses/   # نموذج وقائمة المصاريف
-│   ├── layout/     # الهيدر والسايدبار
-│   └── shared/     # أزرار، مودال، loader
-├── hooks/          # useAuth, useExpenses
-├── pages/          # الصفحات
-├── services/       # Firebase وخدمات المصاريف
-├── types/          # TypeScript
-└── utils/          # تنسيق، ثوابت، تحقق
-```
-
-## PWA
-
-المشروع يدعم PWA: يوجد `public/manifest.json`. لإكمال الدعم يمكن إضافة Service Worker (مثلاً عبر `vite-plugin-pwa`).
-
-## الترخيص
-
-MIT
+React · TypeScript · Vite · Firebase (Auth + Firestore) · Tailwind CSS · Recharts
