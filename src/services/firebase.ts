@@ -15,8 +15,12 @@ let app: ReturnType<typeof initializeApp> | null = null;
 let auth: ReturnType<typeof getAuth>;
 let db: ReturnType<typeof getFirestore>;
 
+/** true فقط عندما تكون مفاتيح Firebase موجودة (مثلاً من .env أو Netlify Environment variables) */
+export const isFirebaseConfigured =
+  Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && !firebaseConfig.apiKey.includes('demo'));
+
 try {
-  const hasConfig = firebaseConfig.apiKey && firebaseConfig.projectId;
+  const hasConfig = firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.apiKey !== 'demo';
   if (hasConfig) {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);

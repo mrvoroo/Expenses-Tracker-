@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { FcGoogle } from 'react-icons/fc';
 import { Button } from '../components/shared/Button';
-import { signUp, signInWithGoogle } from '../services/authService';
+import { signUp } from '../services/authService';
+import { isFirebaseConfigured } from '../services/firebase';
 import { toast } from 'react-toastify';
 
 interface RegisterFormData {
@@ -15,10 +15,10 @@ interface RegisterFormData {
 export function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>();
 
   async function onSubmit(data: RegisterFormData) {
+    if (!isFirebaseConfigured) return;
     setLoading(true);
     try {
       await signUp(data.email, data.password, data.displayName || undefined);
@@ -31,40 +31,15 @@ export function Register() {
     }
   }
 
-  async function onGoogleSignIn() {
-    setGoogleLoading(true);
-    try {
-      await signInWithGoogle();
-      toast.success('تم إنشاء الحساب وتسجيل الدخول');
-      navigate('/');
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'فشل التسجيل عبر Google');
-    } finally {
-      setGoogleLoading(false);
-    }
-  }
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
+        {!isFirebaseConfigured && (
+          <div className="mb-6 p-4 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-800 dark:text-amber-200 text-sm">
+            <p className="font-semibold mb-2">الاتصال بـ Firebase غير مفعّل. أضف Environment variables في Netlify ثم أعد النشر.</p>
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-center mb-6">إنشاء حساب</h1>
-        <button
-          type="button"
-          onClick={onGoogleSignIn}
-          disabled={googleLoading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-border bg-background hover:bg-muted transition-colors disabled:opacity-50 mb-4"
-        >
-          <FcGoogle className="w-5 h-5" />
-          <span>{googleLoading ? 'جاري التسجيل...' : 'المتابعة مع Google'}</span>
-        </button>
-        <div className="relative my-4">
-          <span className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
-          </span>
-          <span className="relative flex justify-center text-xs text-muted-foreground bg-card px-2">
-            أو
-          </span>
-        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="displayName" className="block text-sm font-medium mb-1">

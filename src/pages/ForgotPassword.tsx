@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button } from '../components/shared/Button';
 import { resetPassword } from '../services/authService';
+import { isFirebaseConfigured } from '../services/firebase';
 import { toast } from 'react-toastify';
 
 interface ForgotFormData {
@@ -16,6 +17,7 @@ export function ForgotPassword() {
   const email = watch('email');
 
   async function onSubmit(data: ForgotFormData) {
+    if (!isFirebaseConfigured) return;
     setLoading(true);
     try {
       await resetPassword(data.email);
@@ -31,6 +33,11 @@ export function ForgotPassword() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
+        {!isFirebaseConfigured && (
+          <div className="mb-6 p-4 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-800 dark:text-amber-200 text-sm">
+            <p className="font-semibold">الاتصال بـ Firebase غير مفعّل. أضف Environment variables في Netlify ثم أعد النشر.</p>
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-center mb-2">نسيت كلمة المرور</h1>
         <p className="text-center text-sm text-muted-foreground mb-6">
           أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور

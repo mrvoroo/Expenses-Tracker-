@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { FcGoogle } from 'react-icons/fc';
 import { Button } from '../components/shared/Button';
-import { signIn, signInWithGoogle } from '../services/authService';
+import { signIn } from '../services/authService';
+import { isFirebaseConfigured } from '../services/firebase';
 import { toast } from 'react-toastify';
 
 interface LoginFormData {
@@ -14,10 +14,10 @@ interface LoginFormData {
 export function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
 
   async function onSubmit(data: LoginFormData) {
+    if (!isFirebaseConfigured) return;
     setLoading(true);
     try {
       await signIn(data.email, data.password);
@@ -30,40 +30,21 @@ export function Login() {
     }
   }
 
-  async function onGoogleSignIn() {
-    setGoogleLoading(true);
-    try {
-      await signInWithGoogle();
-      toast.success('تم تسجيل الدخول');
-      navigate('/');
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'فشل تسجيل الدخول عبر Google');
-    } finally {
-      setGoogleLoading(false);
-    }
-  }
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
+        {!isFirebaseConfigured && (
+          <div className="mb-6 p-4 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-800 dark:text-amber-200 text-sm">
+            <p className="font-semibold mb-2">الاتصال بـ Firebase غير مفعّل</p>
+            <p className="mb-2">إذا الموقع منشور على Netlify:</p>
+            <ol className="list-decimal list-inside space-y-1 mr-2">
+              <li>ادخل Netlify → موقعك → Site configuration → Environment variables</li>
+              <li>أضف: VITE_FIREBASE_API_KEY, VITE_FIREBASE_AUTH_DOMAIN, VITE_FIREBASE_PROJECT_ID, VITE_FIREBASE_STORAGE_BUCKET, VITE_FIREBASE_MESSAGING_SENDER_ID, VITE_FIREBASE_APP_ID</li>
+              <li>انسخ القيم من ملف .env على جهازك ثم Trigger deploy → Deploy site</li>
+            </ol>
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-center mb-6">تسجيل الدخول</h1>
-        <button
-          type="button"
-          onClick={onGoogleSignIn}
-          disabled={googleLoading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-border bg-background hover:bg-muted transition-colors disabled:opacity-50 mb-4"
-        >
-          <FcGoogle className="w-5 h-5" />
-          <span>{googleLoading ? 'جاري الدخول...' : 'المتابعة مع Google'}</span>
-        </button>
-        <div className="relative my-4">
-          <span className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
-          </span>
-          <span className="relative flex justify-center text-xs text-muted-foreground bg-card px-2">
-            أو
-          </span>
-        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">

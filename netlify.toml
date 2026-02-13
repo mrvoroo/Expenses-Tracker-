@@ -1,0 +1,12 @@
+# إعدادات النشر على Netlify
+# لا تنسَ إضافة Environment variables في Netlify (نفس أسماء .env)
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# إعادة التوجيه لصفحة الـ SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
